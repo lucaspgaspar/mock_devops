@@ -1,19 +1,20 @@
 package br.com.valueprojects.mock_spring.model;
 
+import infra.JogoDao;
+import br.com.valueprojects.mock_spring.service.SMSService;
+
 import java.util.Calendar;
 import java.util.List;
 
-import infra.JogoDao;
-
-
-
 public class FinalizaJogo {
 
-	private int total = 0;
 	private final JogoDao dao;
+	private final SMSService smsService;
+	private int total = 0;
 
-	public FinalizaJogo(JogoDao dao) {
+	public FinalizaJogo(JogoDao dao, SMSService smsService) {
 		this.dao = dao;
+		this.smsService = smsService;
 	}
 
 	public void finaliza() {
@@ -24,6 +25,7 @@ public class FinalizaJogo {
 				jogo.finaliza();
 				total++;
 				dao.atualiza(jogo);
+				smsService.enviarSMS("Parabéns, você venceu no jogo: " + jogo.getDescricao());
 			}
 		}
 	}
@@ -39,7 +41,6 @@ public class FinalizaJogo {
 			data.add(Calendar.DAY_OF_MONTH, 1);
 			diasNoIntervalo++;
 		}
-
 		return diasNoIntervalo;
 	}
 
