@@ -84,7 +84,7 @@ public class FinalizaJogoTest {
 
 		verify(jogoDao).atualiza(jogo1);
 		verify(jogoDao).atualiza(jogo2);
-		verify(smsService, times(2)).enviarSMS(anyString());
+		verify(smsService, times(2)).enviarSMS(anyString(), anyString());
 	}
 
 	@Test
