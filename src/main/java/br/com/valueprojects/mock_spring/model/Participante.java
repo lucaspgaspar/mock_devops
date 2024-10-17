@@ -4,14 +4,16 @@ public class Participante {
 
 	private int id;
 	private String nome;
+	private String Celular;
 	
 	public Participante(String nome) {
-		this(0, nome);
+		this(0, nome, "1111-1111");
 	}
 
-	public Participante(int id, String nome) {
+	public Participante(int id, String nome, String celular) {
 		this.id = id;
 		this.nome = nome;
+		this.Celular = celular;
 	}
 
 	public int getId() {
