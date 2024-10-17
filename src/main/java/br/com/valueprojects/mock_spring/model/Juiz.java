@@ -22,6 +22,8 @@ public class Juiz {
 			if(resultado.getMetrica() < menosPontos) menosPontos = resultado.getMetrica();
 
 	     }
+
+		jogo.setGanhador(ganhador);
 	}
 		
 	public double getPrimeiroColocado(){

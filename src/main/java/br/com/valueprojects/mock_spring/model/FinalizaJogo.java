@@ -25,7 +25,7 @@ public class FinalizaJogo {
 				jogo.finaliza();
 				total++;
 				dao.atualiza(jogo);
-				smsService.enviarSMS("Parabéns, você venceu no jogo: " + jogo.getDescricao());
+				smsService.enviarSMS(jogo.getGanhador().getParticipante().getCelular(), "Parabéns, você venceu no jogo: " + jogo.getDescricao());
 			}
 		}
 	}

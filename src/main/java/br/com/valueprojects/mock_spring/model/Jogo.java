@@ -13,6 +13,7 @@ public class Jogo {
 	private List<Resultado> resultados;
 	private boolean finaliza;
 	private int id;
+	private Resultado ganhador;
 	
 	public Jogo(String descricao) {
 		this(descricao, Calendar.getInstance());
@@ -22,6 +23,7 @@ public class Jogo {
 		this.descricao = descricao;
 		this.data = data;
 		this.resultados = new ArrayList<Resultado>();
+		this.ganhador = null;
 	}
 	
 	public void anota(Resultado resultado) {
@@ -77,4 +79,7 @@ public class Jogo {
 	 public void setData(Calendar data) {
 	        this.data = data;
 	    }
+
+	public void setGanhador(Resultado ganhador) { this.ganhador = ganhador;	}
+	public Resultado getGanhador() {return this.ganhador;}
 }
