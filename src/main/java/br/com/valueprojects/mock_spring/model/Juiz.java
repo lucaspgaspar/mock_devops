@@ -12,7 +12,7 @@ public class Juiz {
 
 	public void julga(Jogo jogo){
 		if(jogo.getResultados().size()==0){
-			throw new RuntimeException("Sem resultados n�o h� julgamento!");
+			throw new RuntimeException("Sem resultados não há julgamento!");
 			}
 		for(Resultado resultado : jogo.getResultados()){
 			if(resultado.getMetrica() > maisPontos){

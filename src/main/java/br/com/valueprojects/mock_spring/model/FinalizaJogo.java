@@ -19,9 +19,10 @@ public class FinalizaJogo {
 
 	public void finaliza() {
 		List<Jogo> todosJogosEmAndamento = dao.emAndamento();
+        Calendar hoje = Calendar.getInstance();
 
 		for (Jogo jogo : todosJogosEmAndamento) {
-			if (iniciouSemanaAnterior(jogo)) {
+			if (iniciouSemanaAnterior(jogo, hoje)) {
 				jogo.finaliza();
 				total++;
 				dao.atualiza(jogo);
@@ -30,18 +31,16 @@ public class FinalizaJogo {
 		}
 	}
 
-	private boolean iniciouSemanaAnterior(Jogo jogo) {
-		return diasEntre(jogo.getData(), Calendar.getInstance()) >= 7;
-	}
+	private boolean iniciouSemanaAnterior(Jogo jogo, Calendar hoje) {
 
-	private int diasEntre(Calendar inicio, Calendar fim) {
-		Calendar data = (Calendar) inicio.clone();
-		int diasNoIntervalo = 0;
-		while (data.before(fim)) {
-			data.add(Calendar.DAY_OF_MONTH, 1);
-			diasNoIntervalo++;
-		}
-		return diasNoIntervalo;
+		int jogoAno = jogo.getData().get(Calendar.YEAR);
+		int jogoSemana = jogo.getData().get(Calendar.WEEK_OF_YEAR);
+
+		int hojeAno = hoje.get(Calendar.YEAR);
+		int hojeSemana = hoje.get(Calendar.WEEK_OF_YEAR);
+
+		return hojeAno > jogoAno || (hojeAno == jogoAno && hojeSemana > jogoSemana );
+
 	}
 
 	public int getTotalFinalizados() {

@@ -1,7 +1,6 @@
 package br.com.valueprojects.mock_spring;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
@@ -10,6 +9,8 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
+import br.com.valueprojects.mock_spring.model.Participante;
+import br.com.valueprojects.mock_spring.model.Resultado;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -21,78 +22,101 @@ import infra.JogoDao;
 
 public class FinalizaJogoTest {
 
-	private JogoDao jogoDao;
-	private SMSService smsService;
-	private FinalizaJogo finalizaJogo;
+    private JogoDao jogoDao;
+    private SMSService smsService;
+    private FinalizaJogo finalizaJogo;
 
-	@BeforeEach
-	void setup() {
-		jogoDao = mock(JogoDao.class);  // Mock do DAO
-		smsService = mock(SMSService.class);  // Mock do serviço de SMS
-		finalizaJogo = new FinalizaJogo(jogoDao, smsService);  // Injeção de dependências
-	}
+    @BeforeEach
+    void setup() {
+        jogoDao = mock(JogoDao.class);  // Mock do DAO
+        smsService = mock(SMSService.class);  // Mock do serviço de SMS
+        finalizaJogo = new FinalizaJogo(jogoDao, smsService);  // Injeção de dependências
+    }
 
-	@Test
-	public void deveFinalizarJogosDaSemanaAnterior() {
-		Calendar antiga = Calendar.getInstance();
-		antiga.set(1999, 1, 20);
+    private List<Jogo> CriaJogos() {
+        Calendar antiga = Calendar.getInstance();
+        antiga.set(2024, 10, 14);
 
-		Jogo jogo1 = new CriadorDeJogo().para("Caça moedas").naData(antiga).constroi();
-		Jogo jogo2 = new CriadorDeJogo().para("Derruba barreiras").naData(antiga).constroi();
+        Calendar hoje = Calendar.getInstance();
 
-		List<Jogo> jogosAnteriores = Arrays.asList(jogo1, jogo2);
+        Participante joao = new Participante(1, "Joao", "1111111");
+        Participante ana = new Participante(2, "Ana", "22222222");
+        Participante roberto = new Participante(3, "Roberto", "33333333");
+        Participante lucas = new Participante(3, "Lucas", "44444444");
 
-		when(jogoDao.emAndamento()).thenReturn(jogosAnteriores);
+        Jogo jogo1 = new CriadorDeJogo().para("Caça moedas").naData(antiga).constroi();
+        jogo1.anota(new Resultado(joao, 10));
+        jogo1.anota(new Resultado(ana, 115));
+        jogo1.anota(new Resultado(roberto, 70));
+        jogo1.anota(new Resultado(lucas, 90));
+        Jogo jogo2 = new CriadorDeJogo().para("Derruba barreiras").naData(antiga).constroi();
+        jogo2.anota(new Resultado(joao, 100));
+        jogo1.anota(new Resultado(ana, 80));
+        jogo2.anota(new Resultado(roberto, 70));
+        jogo2.anota(new Resultado(lucas, 90));
+        Jogo jogo3 = new CriadorDeJogo().para("Esconde Esconde").naData(hoje).constroi();
+        jogo2.anota(new Resultado(joao, 0));
+        jogo1.anota(new Resultado(ana, 15));
+        jogo2.anota(new Resultado(roberto, 65));
+        jogo2.anota(new Resultado(lucas, 10));
 
-		finalizaJogo.finaliza();
+        List<Jogo> jogos = Arrays.asList(jogo1, jogo2, jogo3);
 
-		assertTrue(jogo1.isFinalizado());
-		assertTrue(jogo2.isFinalizado());
-		assertEquals(2, finalizaJogo.getTotalFinalizados());
-	}
+        return jogos;
+    }
 
-	@Test
-	public void deveVerificarSeMetodoAtualizaFoiInvocado() {
-		Calendar antiga = Calendar.getInstance();
-		antiga.set(1999, 1, 20);
+    @Test
+    public void deveFinalizarJogosDaSemanaAnterior() {
 
-		Jogo jogo1 = new CriadorDeJogo().para("Cata moedas").naData(antiga).constroi();
-		Jogo jogo2 = new CriadorDeJogo().para("Derruba barreiras").naData(antiga).constroi();
+        List<Jogo> jogos = CriaJogos();
+        when(jogoDao.emAndamento()).thenReturn(jogos);
 
-		List<Jogo> jogosAnteriores = Arrays.asList(jogo1, jogo2);
+        finalizaJogo.finaliza();
 
-		when(jogoDao.emAndamento()).thenReturn(jogosAnteriores);
+        assertTrue(jogos.get(0).isFinalizado());
+        assertTrue(jogos.get(1).isFinalizado());
+        assertFalse(jogos.get(2).isFinalizado());
+        assertEquals(2, finalizaJogo.getTotalFinalizados());
+        assertEquals("Ana", jogos.get(0).getGanhador().getParticipante().getNome());
+        assertEquals("Joao", jogos.get(1).getGanhador().getParticipante().getNome());
 
-		finalizaJogo.finaliza();
+        verify(jogoDao).atualiza(jogos.get(0));
+        verify(jogoDao).atualiza(jogos.get(1));
+    }
 
-		verify(jogoDao).atualiza(jogo1);
-	}
+    @Test
+    public void deveVerificarSeMetodoAtualizaFoiInvocado() {
 
-	@Test
-	void deveSalvarJogosFinalizadosEEnviarSMS() {
-		Calendar dataAnterior = Calendar.getInstance();
-		dataAnterior.add(Calendar.DAY_OF_MONTH, -8);
+        List<Jogo> jogos = CriaJogos();
 
-		Jogo jogo1 = new CriadorDeJogo().para("Jogo Teste 1").naData(dataAnterior).constroi();
-		Jogo jogo2 = new CriadorDeJogo().para("Jogo Teste 2").naData(dataAnterior).constroi();
+        when(jogoDao.emAndamento()).thenReturn(jogos);
 
-		List<Jogo> jogosEmAndamento = Arrays.asList(jogo1, jogo2);
+        finalizaJogo.finaliza();
 
-		when(jogoDao.emAndamento()).thenReturn(jogosEmAndamento);
+        verify(jogoDao).atualiza(jogos.get(0));
+        verify(jogoDao).atualiza(jogos.get(1));
+    }
 
-		finalizaJogo.finaliza();
+    @Test
+    void deveSalvarJogosFinalizadosEEnviarSMS() {
 
-		verify(jogoDao).atualiza(jogo1);
-		verify(jogoDao).atualiza(jogo2);
-		verify(smsService, times(2)).enviarSMS(anyString(), anyString());
-	}
+        List<Jogo> jogos = CriaJogos();
 
-	@Test
-	void naoDeveEnviarSMSSemSalvarJogos() {
-		when(jogoDao.emAndamento()).thenReturn(new ArrayList<>());
+        when(jogoDao.emAndamento()).thenReturn(jogos);
 
-		finalizaJogo.finaliza();
+        finalizaJogo.finaliza();
 
-		verifyNoInteractions(smsService);
-	}
+        verify(jogoDao).atualiza(jogos.get(0));
+        verify(jogoDao).atualiza(jogos.get(1));
+        verify(smsService, times(2)).enviarSMS(anyString(), anyString());
+    }
+
+    @Test
+    void naoDeveEnviarSMSSemSalvarJogos() {
+        when(jogoDao.emAndamento()).thenReturn(new ArrayList<>());
+
+        finalizaJogo.finaliza();
+
+        verifyNoInteractions(smsService);
+    }
 }

@@ -14,6 +14,7 @@ public class Jogo {
 	private boolean finaliza;
 	private int id;
 	private Resultado ganhador;
+	private Juiz juiz = new Juiz();
 	
 	public Jogo(String descricao) {
 		this(descricao, Calendar.getInstance());
@@ -61,6 +62,7 @@ public class Jogo {
 	}
 
 	public void finaliza() {
+		juiz.julga(this);
 		this.finaliza = true;
 	}
 	
