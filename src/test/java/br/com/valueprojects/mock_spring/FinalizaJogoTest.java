@@ -35,7 +35,7 @@ public class FinalizaJogoTest {
 
     private List<Jogo> CriaJogos() {
         Calendar antiga = Calendar.getInstance();
-        antiga.set(2024, 10, 14);
+        antiga.set(2024, Calendar.OCTOBER, 15);
 
         Calendar hoje = Calendar.getInstance();
 
