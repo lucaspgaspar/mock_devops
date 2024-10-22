@@ -8,42 +8,45 @@ import java.util.List;
 
 public class FinalizaJogo {
 
-	private final JogoDao dao;
-	private final SMSService smsService;
-	private int total = 0;
+    private final JogoDao dao;
+    private final SMSService smsService;
+    private int total = 0;
 
-	public FinalizaJogo(JogoDao dao, SMSService smsService) {
-		this.dao = dao;
-		this.smsService = smsService;
-	}
+    public FinalizaJogo(JogoDao dao, SMSService smsService) {
+        this.dao = dao;
+        this.smsService = smsService;
+    }
 
-	public void finaliza() {
-		List<Jogo> todosJogosEmAndamento = dao.emAndamento();
+    public void finaliza() {
+        List<Jogo> todosJogosEmAndamento = dao.emAndamento();
         Calendar hoje = Calendar.getInstance();
 
-		for (Jogo jogo : todosJogosEmAndamento) {
-			if (iniciouSemanaAnterior(jogo, hoje)) {
-				jogo.finaliza();
-				total++;
-				dao.atualiza(jogo);
-				smsService.enviarSMS(jogo.getGanhador().getParticipante().getCelular(), "Parabéns, você venceu no jogo: " + jogo.getDescricao());
-			}
-		}
-	}
+        for (Jogo jogo : todosJogosEmAndamento) {
+            if (iniciouSemanaAnterior(jogo, hoje)) {
+                jogo.finaliza();
+                total++;
+                boolean updated = dao.atualiza(jogo);
+                if (updated)
+                    smsService.enviarSMS(jogo.getGanhador().getParticipante().getCelular(), "Parabéns, você venceu no jogo: " + jogo.getDescricao());
+                else
+                    System.err.println("Falha ao atualizar o jogo: " + jogo.getDescricao());
+            }
+        }
+    }
 
-	private boolean iniciouSemanaAnterior(Jogo jogo, Calendar hoje) {
+    private boolean iniciouSemanaAnterior(Jogo jogo, Calendar hoje) {
 
-		int jogoAno = jogo.getData().get(Calendar.YEAR);
-		int jogoSemana = jogo.getData().get(Calendar.WEEK_OF_YEAR);
+        int jogoAno = jogo.getData().get(Calendar.YEAR);
+        int jogoSemana = jogo.getData().get(Calendar.WEEK_OF_YEAR);
 
-		int hojeAno = hoje.get(Calendar.YEAR);
-		int hojeSemana = hoje.get(Calendar.WEEK_OF_YEAR);
+        int hojeAno = hoje.get(Calendar.YEAR);
+        int hojeSemana = hoje.get(Calendar.WEEK_OF_YEAR);
 
-		return hojeAno > jogoAno || (hojeAno == jogoAno && hojeSemana > jogoSemana );
+        return hojeAno > jogoAno || (hojeAno == jogoAno && hojeSemana > jogoSemana);
 
-	}
+    }
 
-	public int getTotalFinalizados() {
-		return total;
-	}
+    public int getTotalFinalizados() {
+        return total;
+    }
 }

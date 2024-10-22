@@ -19,6 +19,7 @@ import br.com.valueprojects.mock_spring.model.FinalizaJogo;
 import br.com.valueprojects.mock_spring.model.Jogo;
 import br.com.valueprojects.mock_spring.service.SMSService;
 import infra.JogoDao;
+import org.mockito.InOrder;
 
 public class FinalizaJogoTest {
 
@@ -70,6 +71,7 @@ public class FinalizaJogoTest {
 
         List<Jogo> jogos = CriaJogos();
         when(jogoDao.emAndamento()).thenReturn(jogos);
+        when(jogoDao.atualiza(any(Jogo.class))).thenReturn(true);
 
         finalizaJogo.finaliza();
 
@@ -90,6 +92,7 @@ public class FinalizaJogoTest {
         List<Jogo> jogos = CriaJogos();
 
         when(jogoDao.emAndamento()).thenReturn(jogos);
+        when(jogoDao.atualiza(any(Jogo.class))).thenReturn(true);
 
         finalizaJogo.finaliza();
 
@@ -103,6 +106,7 @@ public class FinalizaJogoTest {
         List<Jogo> jogos = CriaJogos();
 
         when(jogoDao.emAndamento()).thenReturn(jogos);
+        when(jogoDao.atualiza(any(Jogo.class))).thenReturn(true);
 
         finalizaJogo.finaliza();
 
@@ -112,8 +116,28 @@ public class FinalizaJogoTest {
     }
 
     @Test
+    public void deveGarantirQueSMSSoEhEnviadoAposAtualizacao() {
+
+        List<Jogo> jogos = CriaJogos();
+
+        when(jogoDao.emAndamento()).thenReturn(jogos);
+        when(jogoDao.atualiza(any(Jogo.class))).thenReturn(true);
+
+        finalizaJogo.finaliza();
+
+        verify(jogoDao).atualiza(jogos.get(0));
+        verify(jogoDao).atualiza(jogos.get(1));
+
+        InOrder inOrder = inOrder(jogoDao, smsService);
+        inOrder.verify(jogoDao).atualiza(jogos.get(0));
+        inOrder.verify(smsService).enviarSMS(anyString(), anyString());
+    }
+
+    @Test
     void naoDeveEnviarSMSSemSalvarJogos() {
-        when(jogoDao.emAndamento()).thenReturn(new ArrayList<>());
+        List<Jogo> jogos = CriaJogos();
+        when(jogoDao.emAndamento()).thenReturn(jogos);
+        when(jogoDao.atualiza(any(Jogo.class))).thenReturn(false);
 
         finalizaJogo.finaliza();
 
