@@ -13,7 +13,7 @@ pipeline {
             steps {
                 script {
                     // Garantir que o docker-compose está sendo executado a partir do diretório correto
-                    sh 'docker-compose -f docker-compose.yml up -d --build'
+                    bat 'docker-compose -f docker-compose.yml up -d --build'
                 }
             }
         }
