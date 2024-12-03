@@ -1,0 +1,29 @@
+﻿pipeline {
+    agent any
+    environment {
+        DOCKER_HOST = 'tcp://localhost:2375' // Endereço do Docker remoto
+    }
+    stages {
+        stage('Checkout do Repositório') {
+            steps {
+                checkout scm // Faz o checkout do código do repositório
+            }
+        }
+        stage('Iniciar Containers com Docker Compose') {
+            steps {
+                script {
+                    // Garantir que o docker-compose está sendo executado a partir do diretório correto
+                    sh 'docker-compose -f docker-compose.yml up -d --build'
+                }
+            }
+        }
+    }
+    post {
+        always {
+            echo 'Pipeline concluído!'
+        }
+        failure {
+            echo 'Falha no pipeline!'
+        }
+    }
+}
