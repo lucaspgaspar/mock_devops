@@ -14,7 +14,6 @@ import java.util.List;
 @RequestMapping("/jogos")
 public class JogoController {
 
-    private List<Jogo> jogos = new ArrayList<>();
     private Juiz juiz = new Juiz();
 
     private JogoDao dao;
@@ -27,7 +26,7 @@ public class JogoController {
     @PostMapping("/criar")
     public Jogo criarJogo(@RequestBody String descricao) {
         Jogo jogo = new Jogo(descricao);
-        jogos.add(jogo);
+        this.dao.salva(jogo);
         return jogo;
     }
 
@@ -45,7 +44,7 @@ public class JogoController {
     // Listar todos os jogos
     @GetMapping
     public List<Jogo> listarJogos() {
-        return jogos;
+        return this.dao.emAndamento();
     }
 
 }
