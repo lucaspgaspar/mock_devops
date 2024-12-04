@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
@@ -18,7 +17,7 @@ import br.com.valueprojects.mock_spring.builder.CriadorDeJogo;
 import br.com.valueprojects.mock_spring.model.FinalizaJogo;
 import br.com.valueprojects.mock_spring.model.Jogo;
 import br.com.valueprojects.mock_spring.service.SMSService;
-import infra.JogoDao;
+import br.com.valueprojects.mock_spring.infra.JogoDao;
 import org.mockito.InOrder;
 
 public class FinalizaJogoTest {

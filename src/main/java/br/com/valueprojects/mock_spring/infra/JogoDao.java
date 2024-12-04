@@ -1,4 +1,4 @@
-package infra;
+package br.com.valueprojects.mock_spring.infra;
 
 import java.sql.Connection;
 import java.sql.Date;
@@ -14,18 +14,15 @@ import java.util.List;
 import br.com.valueprojects.mock_spring.model.Jogo;
 import br.com.valueprojects.mock_spring.model.Participante;
 import br.com.valueprojects.mock_spring.model.Resultado;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public class JogoDao {
 
     private Connection conexao;
 
     public JogoDao() {
-        try {
-            this.conexao = DriverManager.getConnection(
-                    "jdbc:mysql://localhost:3306/mocks", "root", "");
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+
     }
 
     private Calendar data(Date date) {

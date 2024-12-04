@@ -1,6 +1,6 @@
 package br.com.valueprojects.mock_spring.model;
 
-import infra.JogoDao;
+import br.com.valueprojects.mock_spring.infra.JogoDao;
 import br.com.valueprojects.mock_spring.service.SMSService;
 
 import java.util.Calendar;

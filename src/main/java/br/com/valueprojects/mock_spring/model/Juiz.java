@@ -8,7 +8,9 @@ public class Juiz {
 	private Resultado ganhador = null;
 	private double menosPontos = Double.POSITIVE_INFINITY;
 	
-	
+
+
+
 
 	public void julga(Jogo jogo){
 		if(jogo.getResultados().size()==0){
