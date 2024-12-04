@@ -1,4 +1,4 @@
-package br.com.valueprojects.mock_spring.infra;
+package br.com.valueprojects.mock_spring.repository;
 
 import java.util.ArrayList;
 import java.util.List;

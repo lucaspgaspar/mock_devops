@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import br.com.valueprojects.mock_spring.builder.CriadorDeJogo;
 import br.com.valueprojects.mock_spring.model.Jogo;
-import br.com.valueprojects.mock_spring.model.Juiz;
+import br.com.valueprojects.mock_spring.business.Juiz;
 import br.com.valueprojects.mock_spring.model.Participante;
 import br.com.valueprojects.mock_spring.model.Resultado;
 

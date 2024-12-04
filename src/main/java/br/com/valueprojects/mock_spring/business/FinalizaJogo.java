@@ -1,6 +1,7 @@
-package br.com.valueprojects.mock_spring.model;
+package br.com.valueprojects.mock_spring.business;
 
-import br.com.valueprojects.mock_spring.infra.JogoDao;
+import br.com.valueprojects.mock_spring.repository.JogoDao;
+import br.com.valueprojects.mock_spring.model.Jogo;
 import br.com.valueprojects.mock_spring.service.SMSService;
 
 import java.util.Calendar;

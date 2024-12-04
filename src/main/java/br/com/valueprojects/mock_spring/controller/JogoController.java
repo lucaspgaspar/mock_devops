@@ -1,10 +1,10 @@
 package br.com.valueprojects.mock_spring.controller;
 
-import br.com.valueprojects.mock_spring.infra.JogoDao;
+import br.com.valueprojects.mock_spring.repository.JogoDao;
 import org.springframework.web.bind.annotation.*;
 
 import br.com.valueprojects.mock_spring.model.Jogo;
-import br.com.valueprojects.mock_spring.model.Juiz;
+import br.com.valueprojects.mock_spring.business.Juiz;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,6 +1,8 @@
 package br.com.valueprojects.mock_spring.model;
 
 
+import br.com.valueprojects.mock_spring.business.Juiz;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;

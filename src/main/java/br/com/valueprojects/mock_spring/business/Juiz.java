@@ -1,6 +1,9 @@
 
-package br.com.valueprojects.mock_spring.model;
+package br.com.valueprojects.mock_spring.business;
 
+
+import br.com.valueprojects.mock_spring.model.Jogo;
+import br.com.valueprojects.mock_spring.model.Resultado;
 
 public class Juiz {
 	

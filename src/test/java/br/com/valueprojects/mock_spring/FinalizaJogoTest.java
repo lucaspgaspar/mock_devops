@@ -14,10 +14,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import br.com.valueprojects.mock_spring.builder.CriadorDeJogo;
-import br.com.valueprojects.mock_spring.model.FinalizaJogo;
+import br.com.valueprojects.mock_spring.business.FinalizaJogo;
 import br.com.valueprojects.mock_spring.model.Jogo;
 import br.com.valueprojects.mock_spring.service.SMSService;
-import br.com.valueprojects.mock_spring.infra.JogoDao;
+import br.com.valueprojects.mock_spring.repository.JogoDao;
 import org.mockito.InOrder;
 
 public class FinalizaJogoTest {
